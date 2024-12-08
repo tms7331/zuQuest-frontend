@@ -13,6 +13,52 @@ import { useAtom } from 'jotai';
 import { walletAddressAtom } from '@/lib/atoms';
 import QRCode from 'react-qr-code';
 import { ReclaimProofRequest } from '@reclaimprotocol/js-sdk';
+import { supabase } from '@/lib/supabaseClient';
+
+type Profile = {
+    address: string;
+    nickname?: string;
+    occupation?: string;
+    availability?: string;
+    interests?: string;
+    skills?: string;
+};
+
+
+export const addProfile = async (profile: Profile) => {
+    const { data, error } = await supabase.from('profiles').insert([profile]);
+    if (error) {
+        console.error('Error inserting profile:', error);
+        throw new Error('Failed to add profile');
+    }
+    return data;
+};
+
+export const updateProfile = async (address: string, updates: Profile) => {
+    const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('address', address);
+    if (error) {
+        console.error('Error updating profile:', error);
+        throw new Error('Failed to update profile');
+    }
+    return data;
+};
+
+export const getProfile = async (address: string) => {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('address', address)
+        .single(); // Fetch only a single record
+    if (error) {
+        console.error('Error fetching profile:', error);
+        throw new Error('Failed to fetch profile');
+    }
+    return data;
+};
+
 
 function useDeviceType() {
     // Hacky way to determine if user is on mobile or desktop
@@ -34,8 +80,32 @@ export default function CompleteProfile() {
     const isMobile = useDeviceType();
     const router = useRouter();
 
-    const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
+    // const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
+    const walletAddress = "0x456";
     const [reclaimRequestUrl, setReclaimRequestUrl] = useState('');
+    const [newUser, setNewUser] = useState(true);
+
+    useEffect(() => {
+        const loadProfileData = async () => {
+            try {
+                const profileData = await getProfile(walletAddress);
+                if (profileData) {
+                    setNewUser(false);
+                    setFormData({
+                        nickname: profileData.nickname || '',
+                        occupation: profileData.occupation || '',
+                        availability: profileData.availability || '',
+                        interests: profileData.interests || '',
+                        skills: profileData.skills || ''
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        };
+        loadProfileData();
+    }, [walletAddress]);
+
 
     const [formData, setFormData] = useState({
         nickname: '',
@@ -62,6 +132,11 @@ export default function CompleteProfile() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Form Data:', formData);
+        if (newUser) {
+            addProfile({ ...formData, address: walletAddress });
+        } else {
+            updateProfile(walletAddress, { ...formData, address: walletAddress });
+        }
         router.push('/quests');
     };
 

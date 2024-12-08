@@ -48,10 +48,10 @@ export default function ConnectWristband() {
             name: 'get_pkeys',
         };
 
-        let gate = new HaloGateway('wss://s1.halo-gateway.arx.org', {
+        const gate = new HaloGateway('wss://s1.halo-gateway.arx.org', {
             createWebSocket: (url) => new W3CWebSocket(url) as unknown as WebSocket
         });
-        let pairInfo = await gate.startPairing();
+        const pairInfo = await gate.startPairing();
         setQrc(pairInfo.execURL);
         console.log('Waiting for smartphone to connect...');
         try {
@@ -61,7 +61,7 @@ export default function ConnectWristband() {
             console.log(e);
         }
         try {
-            let res = await gate.execHaloCmd(cmd);
+            const res = await gate.execHaloCmd(cmd);
             const walletAddress = res.etherAddresses[1];
             setWalletAddress(walletAddress);
             setStatusText("");
