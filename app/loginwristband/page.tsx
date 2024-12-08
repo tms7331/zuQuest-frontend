@@ -11,6 +11,7 @@ import { walletAddressAtom } from '@/lib/atoms';
 export default function ConnectWristband() {
     const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
     const [statusText, setStatusText] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
 
     async function exec() {
         console.log("Called exec...")
@@ -35,9 +36,9 @@ export default function ConnectWristband() {
             const walletAddress = res.etherAddresses[1];
             setWalletAddress(walletAddress);
             setStatusText(walletAddress);
-
+            setLoggedIn(true);
             // Redirect to profile page after successful scan
-            window.location.href = '/profile';
+            // window.location.href = '/profile';
         } catch (e) {
             // the command has failed, display error to the user
             setStatusText('Scanning failed, click on the button again to retry. Details: ' + String(e));
@@ -71,12 +72,16 @@ export default function ConnectWristband() {
                 </div>
 
                 <div className="flex flex-col items-center gap-4">
-                    <Button
-                        className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-6 rounded-full w-full max-w-xs text-lg"
-                        onClick={exec}
-                    >
-                        Get Started
-                    </Button>
+                    {loggedIn ? (
+                        <Link href="/profile">Go to Profile</Link>
+                    ) : (
+                        <Button
+                            className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-6 rounded-full w-full max-w-xs text-lg"
+                            onClick={exec}
+                        >
+                            Get Started
+                        </Button>
+                    )}
                 </div>
                 <div>{statusText}</div>
 
