@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
+import { questList } from "@/lib/questList"
 
 export default function Page() {
     return (
@@ -79,20 +80,20 @@ export default function Page() {
 
                 {/* Quest Grid */}
                 <div className="grid grid-cols-2 gap-4">
-                    {[1, 2, 3, 4].map((i) => (
-                        <Card key={i} className="overflow-hidden">
+                    {questList.map((quest, index) => (
+                        <Card key={index} className="overflow-hidden">
                             <div className="p-4 space-y-2">
-                                <h3 className="font-bold">Join Group Yoga</h3>
+                                <h3 className="font-bold">{quest.title}</h3>
                                 <p className="text-sm text-gray-600">
-                                    Mentor two beginners (or intermediate learners) in coding. Help them understand...
+                                    {quest.description}
                                 </p>
                                 <div className="flex justify-between items-center">
                                     <Badge className="bg-[#3D8F8F]">
                                         <Trophy className="w-4 h-4 mr-1" />
-                                        12
+                                        {quest.points}
                                     </Badge>
                                     <Badge variant="secondary" className="bg-white">
-                                        +1h
+                                        +{quest.duration}h
                                     </Badge>
                                 </div>
                             </div>

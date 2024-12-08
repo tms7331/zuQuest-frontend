@@ -58,7 +58,6 @@ const updatePool = async (tag: string, updates: Pool) => {
 };
 
 
-
 export default function Page() {
 
     const isMobile = useDeviceType();
@@ -92,10 +91,6 @@ export default function Page() {
         try {
             const res = await gate.execHaloCmd(cmd);
             console.log(res)
-            // TODO - stuff here...
-            //const walletAddress = res.etherAddresses[1];
-            //setWalletAddress(walletAddress);
-            //setStatusText("");
             await updatePool(tag, { tag: tag, count: poolsMap[tag] + 1 });
             setPoolsMap({ ...poolsMap, [tag]: poolsMap[tag] + 1 });
             setQrc("");
