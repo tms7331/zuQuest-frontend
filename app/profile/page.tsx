@@ -7,9 +7,12 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
+import { useAtom } from 'jotai';
+import { walletAddressAtom } from '@/lib/atoms';
 
 export default function CompleteProfile() {
 
+    const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
 
 
     return (
@@ -38,7 +41,7 @@ export default function CompleteProfile() {
                                 <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 <path d="M9 12l2 2 4-4" />
                             </svg>
-                            <span className="text-sm font-mono text-gray-600">0x442BA2a9ax828191...33</span>
+                            <span className="text-sm font-mono text-gray-600">0x442BA2a9ax828191...33 {walletAddress}</span>
                         </div>
                     </CardContent>
                 </Card>
@@ -46,7 +49,7 @@ export default function CompleteProfile() {
                 <Button
                     className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white mb-8 h-14 text-lg"
                 >
-                    Import Safely from LinkedIn
+                    Import Safely from LinkedIn {walletAddress}
                 </Button>
 
                 <form className="space-y-6">

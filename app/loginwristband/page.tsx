@@ -5,20 +5,19 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState } from 'react'
 import { execHaloCmdWeb } from '@arx-research/libhalo/api/web'
+import { useAtom } from 'jotai';
+import { walletAddressAtom } from '@/lib/atoms';
 
 export default function ConnectWristband() {
-
+    const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
     const [statusText, setStatusText] = useState('');
-    // <Link href="/logincreateprofile">Get Started</Link>
 
     async function exec() {
         console.log("Called exec...")
         const cmd = {
             name: 'get_pkeys',
         };
-
         try {
-            // --- request NFC command execution ---
             const res = await execHaloCmdWeb(cmd, {
                 statusCallback: (cause) => {
                     if (cause === "init") {
@@ -33,14 +32,17 @@ export default function ConnectWristband() {
                 }
             });
             // the command has succeeded, display the result to the user
-            setStatusText(JSON.stringify(res, null, 4));
+            const walletAddress = res.etherAddresses[1];
+            setWalletAddress(walletAddress);
+            setStatusText(walletAddress);
+
+            // Redirect to profile page after successful scan
+            window.location.href = '/profile';
         } catch (e) {
             // the command has failed, display error to the user
             setStatusText('Scanning failed, click on the button again to retry. Details: ' + String(e));
         }
     }
-
-
 
     return (
         <main className="min-h-screen bg-[#E5F2F2] flex flex-col items-center justify-start p-4">
