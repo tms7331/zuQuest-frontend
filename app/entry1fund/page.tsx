@@ -13,7 +13,7 @@ export default function Page() {
                 <div className="w-full space-y-8 flex-grow flex flex-col justify-center">
                     <div className="relative h-64 md:h-80">
                         <Image
-                            src="/placeholder.svg?height=400&width=400"
+                            src="/CityscapesTown.png?height=400&width=400"
                             alt="Cityscape illustration with buildings and vehicles"
                             fill
                             className="object-contain"

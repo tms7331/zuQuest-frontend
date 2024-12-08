@@ -8,19 +8,25 @@ import { Footer } from "@/components/footer"
 export default function Page() {
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#E5F2F2] to-white">
-            <header className="flex justify-between items-center p-4">
+            <header className="flex items-center justify-between p-4 bg-white">
                 <button className="p-2">
-                    <div className="w-6 h-0.5 bg-black mb-1"></div>
-                    <div className="w-6 h-0.5 bg-black mb-1"></div>
-                    <div className="w-6 h-0.5 bg-black"></div>
+                    <div className="w-6 h-0.5 bg-gray-600 mb-1"></div>
+                    <div className="w-6 h-0.5 bg-gray-600 mb-1"></div>
+                    <div className="w-6 h-0.5 bg-gray-600"></div>
                 </button>
                 <h1 className="text-2xl font-bold">ZUQUESTS</h1>
                 <div className="flex items-center gap-2">
-                    <div className="flex items-center bg-white rounded-full px-3 py-1 shadow-sm">
+                    <div className="flex items-center bg-white rounded-full px-3 py-1 shadow">
                         <Trophy className="w-5 h-5 text-[#3D8F8F] mr-1" />
-                        <span className="text-lg font-semibold">48</span>
+                        <span className="font-semibold">48</span>
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-gray-200"></div>
+                    <Image
+                        src="/Profile.png"
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                    />
                 </div>
             </header>
 

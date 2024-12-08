@@ -12,7 +12,7 @@ export default function ConnectWristband() {
             <div className="w-full max-w-md space-y-12">
                 <div className="relative h-80 w-full">
                     <Image
-                        src="/wristband.jpg"
+                        src="/bracelet.png"
                         alt="Black wristband with green accents"
                         fill
                         className="object-contain"
@@ -22,10 +22,10 @@ export default function ConnectWristband() {
 
                 <div className="text-center space-y-4">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-                        Connect Wirstband
+                        Connect Wristband
                     </h2>
                     <p className="text-gray-500 text-lg md:text-xl max-w-sm mx-auto">
-                        Tap on Get Started and Connect Your Wirstband
+                        Tap on Get Started and Connect Your Wristband
                     </p>
                 </div>
 

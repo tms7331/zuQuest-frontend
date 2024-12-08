@@ -23,7 +23,7 @@ export default function Page() {
                         <span className="font-semibold">48</span>
                     </div>
                     <Image
-                        src="/placeholder.svg"
+                        src="/Profile.png"
                         alt="Profile"
                         width={40}
                         height={40}
@@ -38,7 +38,7 @@ export default function Page() {
                 <Card className="overflow-hidden">
                     <div className="relative">
                         <Image
-                            src="/placeholder.svg"
+                            src="/CitySkyline.png"
                             alt="City skyline"
                             width={600}
                             height={300}

@@ -12,7 +12,7 @@ export default function Home() {
       <div className="w-full max-w-md space-y-8">
         <div className="relative h-64 md:h-80">
           <Image
-            src="/placeholder.svg?height=400&width=400"
+            src="/LandingPagePhone.png?height=400&width=400"
             alt="Illustration of a person with a phone"
             fill
             className="object-contain"

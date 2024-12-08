@@ -30,7 +30,7 @@ export default function QuestDetail() {
                     </div>
                     <div className="relative w-full aspect-[2/1] rounded-lg overflow-hidden">
                         <Image
-                            src="/placeholder.svg?height=300&width=600"
+                            src="/CitySkyline.png?height=300&width=600"
                             alt="City skyline illustration"
                             fill
                             className="object-cover"

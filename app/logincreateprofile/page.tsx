@@ -32,13 +32,11 @@ export default function WristbandFound() {
                     <Check className="w-12 h-12 text-white" />
                 </div>
 
-                {/* Wristband Image */}
-                <div className="w-full max-w-md aspect-[4/3] relative mb-8">
+                <div className="relative h-80 w-full">
                     <Image
-                        src="/placeholder.svg?height=400&width=400"
-                        alt="Wristband"
-                        width={400}
-                        height={400}
+                        src="/bracelet.png"
+                        alt="Black wristband with green accents"
+                        fill
                         className="object-contain"
                         priority
                     />

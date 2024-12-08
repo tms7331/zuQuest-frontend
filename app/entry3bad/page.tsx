@@ -10,20 +10,19 @@ export default function Page() {
                 <h1 className="text-2xl md:text-4xl font-serif tracking-wider">ZUQUESTS</h1>
             </div>
 
-            {/* Main Content */}
-            <div className="w-full max-w-md space-y-8 flex-1 flex flex-col items-center justify-center">
-                {/* Illustration */}
-                <div className="relative w-full aspect-square max-w-md">
-                    <div className="absolute inset-0 bg-[#E5F2F2] rounded-full transform scale-[1.8]" />
+
+
+            <div className="w-full max-w-md space-y-8">
+                <div className="relative h-64 md:h-80">
                     <Image
-                        src="/placeholder.svg?height=400&width=400"
+                        src="/BandParty.png?height=400&width=400"
                         alt="Illustration of two people performing on stage"
-                        width={400}
-                        height={400}
-                        className="relative z-10"
+                        fill
+                        className="object-contain"
                         priority
                     />
                 </div>
+
 
                 {/* Pagination Dots */}
                 <div className="flex justify-center gap-2 py-4">
@@ -57,7 +56,7 @@ export default function Page() {
                     className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-2 rounded-full"
                     asChild
                 >
-                    <Link href="/">Sign In</Link>
+                    <Link href="/loginwristband">Sign In</Link>
                 </Button>
             </div>
         </main>
