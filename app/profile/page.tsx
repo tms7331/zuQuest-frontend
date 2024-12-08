@@ -80,8 +80,8 @@ export default function CompleteProfile() {
     const isMobile = useDeviceType();
     const router = useRouter();
 
-    // const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
-    const walletAddress = "0x456";
+    const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
+    // const walletAddress = "0x456";
     const [reclaimRequestUrl, setReclaimRequestUrl] = useState('');
     const [newUser, setNewUser] = useState(true);
 
