@@ -1,11 +1,175 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Trophy, Home, Search, Repeat, Award } from 'lucide-react'
+import QRCode from 'react-qr-code';
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { Footer } from "@/components/footer"
+import { execHaloCmdWeb, HaloGateway } from '@arx-research/libhalo/api/web'
+import { supabase } from '@/lib/supabaseClient';
+
+
+
+function useDeviceType() {
+    // Hacky way to determine if user is on mobile or desktop
+    // Will fail if window is sized down on desktop
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
+        handleResize(); // Set initial value
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return isMobile;
+}
+
+
+type Pool = {
+    tag: string;
+    count: number;
+}
+
+const fetchPools = async () => {
+    const { data, error } = await supabase.from('pools').select('*');
+    if (error) {
+        console.error('Error fetching pools:', error);
+        throw new Error('Failed to fetch pools');
+    }
+    return data;
+};
+
+
+const updatePool = async (tag: string, updates: Pool) => {
+    const { data, error } = await supabase
+        .from('pools')
+        .update(updates)
+        .eq('tag', tag);
+    if (error) {
+        console.error('Error updating pool:', error);
+        throw new Error('Failed to update profile');
+    }
+    return data;
+};
+
+
 
 export default function Page() {
+
+    const isMobile = useDeviceType();
+
+    const [poolsMap, setPoolsMap] = useState<Record<string, number>>({});
+    const [error, setError] = useState<string | null>(null);
+
+    const [statusText, setStatusText] = useState('');
+    // qrcodes will only be used on desktop
+    const [qrc, setQrc] = useState("");
+
+    async function connectDesktop(tag: string) {
+        const cmd = {
+            name: 'sign',
+            keyNo: 1,
+            message: "0123"
+        };
+
+        const gate = new HaloGateway('wss://s1.halo-gateway.arx.org', {
+            createWebSocket: (url) => new W3CWebSocket(url) as unknown as WebSocket
+        });
+        const pairInfo = await gate.startPairing();
+        setQrc(pairInfo.execURL);
+        console.log('Waiting for smartphone to connect...');
+        try {
+            await gate.waitConnected();
+        } catch (e) {
+            console.error('caught error when waitConnected()');
+            console.log(e);
+        }
+        try {
+            const res = await gate.execHaloCmd(cmd);
+            console.log(res)
+            // TODO - stuff here...
+            //const walletAddress = res.etherAddresses[1];
+            //setWalletAddress(walletAddress);
+            //setStatusText("");
+            await updatePool(tag, { tag: tag, count: poolsMap[tag] + 1 });
+            setPoolsMap({ ...poolsMap, [tag]: poolsMap[tag] + 1 });
+            setQrc("");
+        } catch (e) {
+            console.log('caught error when execHaloCmd');
+        }
+    }
+
+    async function connectMobile(tag: string) {
+        // Note - this will ONLY work on mobile
+        // Need separate function for desktop compatability
+        const cmd = {
+            name: 'sign',
+            keyNo: 1,
+            message: "4567"
+        };
+
+        try {
+            const res = await execHaloCmdWeb(cmd, {
+                statusCallback: (cause) => {
+                    if (cause === "init") {
+                        setStatusText("Please tap the tag to the back of your smartphone and hold it...");
+                    } else if (cause === "retry") {
+                        setStatusText("Something went wrong, please try to tap the tag again...");
+                    } else if (cause === "scanned") {
+                        setStatusText("Tag scanned successfully, post-processing the result...");
+                    } else {
+                        setStatusText(cause);
+                    }
+                }
+            });
+            await updatePool(tag, { tag: tag, count: poolsMap[tag] + 1 });
+            setPoolsMap({ ...poolsMap, [tag]: poolsMap[tag] + 1 });
+            setStatusText("");
+        } catch (e) {
+            // the command has failed, display error to the user
+            setStatusText('Scanning failed, click on the button again to retry. Details: ' + String(e));
+        }
+    }
+
+    async function connectToWristband(tag: string) {
+        if (isMobile) {
+            await connectMobile(tag);
+        } else {
+            await connectDesktop(tag);
+        }
+    }
+
+
+    useEffect(() => {
+        const callFetchPools = async () => {
+            try {
+                const pools = await fetchPools();
+                console.log("GOT POOLS", pools)
+                // {tag: 'sport', count: 2}
+                if (pools) {
+                    const poolsMap = pools.reduce((acc, pool) => {
+                        acc[pool.tag] = pool.count;
+                        return acc;
+                    }, {} as Record<string, number>);
+                    console.log("POOLS MAP", poolsMap);
+
+                    setPoolsMap(poolsMap);
+                } else {
+                    setError('Failed to fetch pools');
+                }
+            } catch (err) {
+                setError('Error fetching data');
+            }
+        };
+
+        callFetchPools();
+    }, []);
+
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#E5F2F2] to-white">
             <header className="flex items-center justify-between p-4 bg-white">
@@ -53,7 +217,7 @@ export default function Page() {
                     <Card>
                         <CardContent className="p-6 space-y-4">
                             <h3 className="text-2xl font-bold text-[#3D8F8F]">Sport</h3>
-                            <div className="text-[#3D8F8F] mb-2">Latest</div>
+                            <div className="text-[#3D8F8F] mb-2">Interest Points: {poolsMap['sport']}</div>
                             <div className="flex gap-4 overflow-x-auto pb-2">
                                 <div className="bg-white rounded-xl p-4 shadow-sm min-w-[150px]">
                                     <h4 className="font-bold">Go for a Run</h4>
@@ -62,7 +226,9 @@ export default function Page() {
                                     <h4 className="font-bold">Join Padel</h4>
                                 </div>
                             </div>
-                            <Button className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A]">
+                            <Button className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A]"
+                                onClick={() => connectToWristband('sport')}
+                            >
                                 Stake
                             </Button>
                         </CardContent>
@@ -72,7 +238,7 @@ export default function Page() {
                     <Card>
                         <CardContent className="p-6 space-y-4">
                             <h3 className="text-2xl font-bold text-[#3D8F8F]">Travel</h3>
-                            <div className="text-[#3D8F8F] mb-2">Latest</div>
+                            <div className="text-[#3D8F8F] mb-2">Interest Points: {poolsMap['travel']}</div>
                             <div className="flex gap-4 overflow-x-auto pb-2">
                                 <div className="bg-white rounded-xl p-4 shadow-sm min-w-[150px]">
                                     <h4 className="font-bold">Island Tour</h4>
@@ -81,11 +247,21 @@ export default function Page() {
                                     <h4 className="font-bold">Go for a Run</h4>
                                 </div>
                             </div>
-                            <Button className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A]">
+                            <Button className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A]"
+                                onClick={() => connectToWristband('travel')}
+                            >
                                 Stake
                             </Button>
                         </CardContent>
                     </Card>
+
+
+                    <div>
+                        {qrc && (
+                            <QRCode value={qrc} />
+                        )}
+                    </div>
+
                 </div>
             </main>
             <Footer />
