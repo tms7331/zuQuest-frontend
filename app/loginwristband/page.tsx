@@ -2,17 +2,38 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import QRCode from 'react-qr-code';
+import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { Button } from "@/components/ui/button"
-import { useState } from 'react'
-import { execHaloCmdWeb } from '@arx-research/libhalo/api/web'
+import { useEffect, useState } from 'react'
+import { execHaloCmdWeb, HaloGateway } from '@arx-research/libhalo/api/web'
 import { useAtom } from 'jotai';
 import { walletAddressAtom } from '@/lib/atoms';
 
+
+// Duplicate code - look to extract
+function useDeviceType() {
+    // Hacky way to determine if user is on mobile or desktop
+    // Will fail if window is sized down on desktop
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
+        handleResize(); // Set initial value
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return isMobile;
+}
+
 export default function ConnectWristband() {
+    const isMobile = useDeviceType();
     const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
     const [statusText, setStatusText] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
-
+    // qrcodes will only be used on desktop
+    const [qrc, setQrc] = useState("");
 
     async function connectFake() {
         const fakeAddress = "0x123"
@@ -22,8 +43,36 @@ export default function ConnectWristband() {
         setLoggedIn(true);
     }
 
+    async function connectDesktop() {
+        const cmd = {
+            name: 'get_pkeys',
+        };
 
-    async function connectToWristband() {
+        let gate = new HaloGateway('wss://s1.halo-gateway.arx.org', {
+            createWebSocket: (url) => new W3CWebSocket(url) as unknown as WebSocket
+        });
+        let pairInfo = await gate.startPairing();
+        setQrc(pairInfo.execURL);
+        console.log('Waiting for smartphone to connect...');
+        try {
+            await gate.waitConnected();
+        } catch (e) {
+            console.error('caught error when waitConnected()');
+            console.log(e);
+        }
+        try {
+            let res = await gate.execHaloCmd(cmd);
+            const walletAddress = res.etherAddresses[1];
+            setWalletAddress(walletAddress);
+            setStatusText("");
+            setQrc("");
+            setLoggedIn(true);
+        } catch (e) {
+            console.log('caught error when execHaloCmd');
+        }
+    }
+
+    async function connectMobile() {
         // Note - this will ONLY work on mobile
         // Need separate function for desktop compatability
         const cmd = {
@@ -53,6 +102,14 @@ export default function ConnectWristband() {
         } catch (e) {
             // the command has failed, display error to the user
             setStatusText('Scanning failed, click on the button again to retry. Details: ' + String(e));
+        }
+    }
+
+    async function connectToWristband() {
+        if (isMobile) {
+            await connectMobile();
+        } else {
+            await connectDesktop();
         }
     }
 
@@ -101,6 +158,11 @@ export default function ConnectWristband() {
                             Get Started
                         </Button>
                     )}
+
+                    {qrc && (
+                        <QRCode value={qrc} />
+                    )}
+
                 </div>
                 <div>{statusText}</div>
 
