@@ -13,8 +13,19 @@ export default function ConnectWristband() {
     const [statusText, setStatusText] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
 
-    async function exec() {
-        console.log("Called exec...")
+
+    async function connectFake() {
+        const fakeAddress = "0x123"
+        // For web testing
+        setWalletAddress(fakeAddress);
+        setStatusText("");
+        setLoggedIn(true);
+    }
+
+
+    async function connectToWristband() {
+        // Note - this will ONLY work on mobile
+        // Need separate function for desktop compatability
         const cmd = {
             name: 'get_pkeys',
         };
@@ -35,7 +46,7 @@ export default function ConnectWristband() {
             // the command has succeeded, display the result to the user
             const walletAddress = res.etherAddresses[1];
             setWalletAddress(walletAddress);
-            setStatusText(walletAddress);
+            setStatusText("");
             setLoggedIn(true);
             // Redirect to profile page after successful scan
             // window.location.href = '/profile';
@@ -73,11 +84,19 @@ export default function ConnectWristband() {
 
                 <div className="flex flex-col items-center gap-4">
                     {loggedIn ? (
-                        <Link href="/profile">Go to Profile</Link>
+                        <Link href="/profile">
+                            <Button
+                                className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-6 rounded-full w-full max-w-xs text-lg"
+                            >
+
+                                Go to Profile
+                            </Button>
+                        </Link>
+
                     ) : (
                         <Button
                             className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-6 rounded-full w-full max-w-xs text-lg"
-                            onClick={exec}
+                            onClick={connectToWristband}
                         >
                             Get Started
                         </Button>
