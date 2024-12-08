@@ -25,7 +25,7 @@ type Profile = {
 };
 
 
-export const addProfile = async (profile: Profile) => {
+const addProfile = async (profile: Profile) => {
     const { data, error } = await supabase.from('profiles').insert([profile]);
     if (error) {
         console.error('Error inserting profile:', error);
@@ -34,7 +34,7 @@ export const addProfile = async (profile: Profile) => {
     return data;
 };
 
-export const updateProfile = async (address: string, updates: Profile) => {
+const updateProfile = async (address: string, updates: Profile) => {
     const { data, error } = await supabase
         .from('profiles')
         .update(updates)
@@ -46,7 +46,7 @@ export const updateProfile = async (address: string, updates: Profile) => {
     return data;
 };
 
-export const getProfile = async (address: string) => {
+const getProfile = async (address: string) => {
     const { data, error } = await supabase
         .from('profiles')
         .select('*')
