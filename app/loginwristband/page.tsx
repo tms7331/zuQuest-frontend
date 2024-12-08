@@ -1,8 +1,47 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { useState } from 'react'
+import { execHaloCmdWeb } from '@arx-research/libhalo/api/web'
 
 export default function ConnectWristband() {
+
+    const [statusText, setStatusText] = useState('');
+    // <Link href="/logincreateprofile">Get Started</Link>
+
+    async function exec() {
+        console.log("Called exec...")
+        const cmd = {
+            name: 'get_pkeys',
+        };
+
+        try {
+            // --- request NFC command execution ---
+            const res = await execHaloCmdWeb(cmd, {
+                statusCallback: (cause) => {
+                    if (cause === "init") {
+                        setStatusText("Please tap the tag to the back of your smartphone and hold it...");
+                    } else if (cause === "retry") {
+                        setStatusText("Something went wrong, please try to tap the tag again...");
+                    } else if (cause === "scanned") {
+                        setStatusText("Tag scanned successfully, post-processing the result...");
+                    } else {
+                        setStatusText(cause);
+                    }
+                }
+            });
+            // the command has succeeded, display the result to the user
+            setStatusText(JSON.stringify(res, null, 4));
+        } catch (e) {
+            // the command has failed, display error to the user
+            setStatusText('Scanning failed, click on the button again to retry. Details: ' + String(e));
+        }
+    }
+
+
+
     return (
         <main className="min-h-screen bg-[#E5F2F2] flex flex-col items-center justify-start p-4">
             <div className="w-full max-w-md text-center mb-12">
@@ -32,11 +71,13 @@ export default function ConnectWristband() {
                 <div className="flex flex-col items-center gap-4">
                     <Button
                         className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-6 rounded-full w-full max-w-xs text-lg"
-                        asChild
+                        onClick={exec}
                     >
-                        <Link href="/logincreateprofile">Get Started</Link>
+                        Get Started
                     </Button>
                 </div>
+                <div>{statusText}</div>
+
             </div>
         </main>
     )

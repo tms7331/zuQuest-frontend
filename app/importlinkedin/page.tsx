@@ -9,6 +9,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 
 export default function CompleteProfile() {
+
+
+
     return (
         <main className="min-h-screen bg-[#E5F2F2]">
             <div className="container max-w-md mx-auto p-4">
