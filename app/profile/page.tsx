@@ -22,6 +22,7 @@ type Profile = {
     availability?: string;
     interests?: string;
     skills?: string;
+    wants_to_learn?: string;
 };
 
 
@@ -96,7 +97,8 @@ export default function CompleteProfile() {
                         occupation: profileData.occupation || '',
                         availability: profileData.availability || '',
                         interests: profileData.interests || '',
-                        skills: profileData.skills || ''
+                        skills: profileData.skills || '',
+                        wants_to_learn: profileData.wants_to_learn || ''
                     });
                 }
             } catch (error) {
@@ -112,7 +114,8 @@ export default function CompleteProfile() {
         occupation: '',
         availability: '',
         interests: '',
-        skills: ''
+        skills: '',
+        wants_to_learn: ''
     });
 
     const interestsRef = useRef<HTMLTextAreaElement>(null);
@@ -315,6 +318,31 @@ export default function CompleteProfile() {
                                 value={formData.skills}
                                 onChange={(e) => {
                                     setFormData({ ...formData, skills: e.target.value });
+                                    e.target.style.height = 'auto';
+                                    e.target.style.height = e.target.scrollHeight + 'px';
+                                }}
+                                style={{ height: '56px' }}
+                            />
+                            <svg
+                                className="absolute left-4 top-4 w-5 h-5 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M4 5h16M4 12h16M4 19h16" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="wants_to_learn">What Do You Want to Learn?</Label>
+                        <div className="relative">
+                            <textarea
+                                id="wants_to_learn"
+                                className="w-full min-h-[56px] pl-12 pr-4 py-2 bg-white/80 backdrop-blur border-0 rounded-md resize-none overflow-hidden"
+                                value={formData.wants_to_learn}
+                                onChange={(e) => {
+                                    setFormData({ ...formData, wants_to_learn: e.target.value });
                                     e.target.style.height = 'auto';
                                     e.target.style.height = e.target.scrollHeight + 'px';
                                 }}
