@@ -11,23 +11,7 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { Footer } from "@/components/footer"
 import { execHaloCmdWeb, HaloGateway } from '@arx-research/libhalo/api/web'
 import { supabase } from '@/lib/supabaseClient';
-
-
-
-function useDeviceType() {
-    // Hacky way to determine if user is on mobile or desktop
-    // Will fail if window is sized down on desktop
-    const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth <= 768);
-
-        handleResize(); // Set initial value
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    return isMobile;
-}
+import { isMobile } from 'react-device-detect';
 
 
 type Pool = {
@@ -59,8 +43,6 @@ const updatePool = async (tag: string, updates: Pool) => {
 
 
 export default function Page() {
-
-    const isMobile = useDeviceType();
 
     const [poolsMap, setPoolsMap] = useState<Record<string, number>>({});
     const [error, setError] = useState<string | null>(null);

@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link"
+import QRCode from 'react-qr-code';
 import { useRouter } from "next/navigation";
 import { X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -8,12 +10,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import Link from "next/link"
 import { useAtom } from 'jotai';
 import { walletAddressAtom } from '@/lib/atoms';
-import QRCode from 'react-qr-code';
 import { ReclaimProofRequest } from '@reclaimprotocol/js-sdk';
 import { supabase } from '@/lib/supabaseClient';
+import { isMobile } from 'react-device-detect';
 
 type Profile = {
     address: string;
@@ -61,24 +62,7 @@ const getProfile = async (address: string) => {
 };
 
 
-function useDeviceType() {
-    // Hacky way to determine if user is on mobile or desktop
-    // Will fail if window is sized down on desktop
-    const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth <= 768);
-
-        handleResize(); // Set initial value
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    return isMobile;
-}
-
-
 export default function CompleteProfile() {
-    const isMobile = useDeviceType();
     const router = useRouter();
 
     const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);

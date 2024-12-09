@@ -9,26 +9,10 @@ import { useEffect, useState } from 'react'
 import { execHaloCmdWeb, HaloGateway } from '@arx-research/libhalo/api/web'
 import { useAtom } from 'jotai';
 import { walletAddressAtom } from '@/lib/atoms';
+import { isMobile } from 'react-device-detect';
 
-
-// Duplicate code - look to extract
-function useDeviceType() {
-    // Hacky way to determine if user is on mobile or desktop
-    // Will fail if window is sized down on desktop
-    const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth <= 768);
-
-        handleResize(); // Set initial value
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    return isMobile;
-}
 
 export default function ConnectWristband() {
-    const isMobile = useDeviceType();
     const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
     const [statusText, setStatusText] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
