@@ -15,6 +15,8 @@ import { walletAddressAtom } from '@/lib/atoms';
 import { ReclaimProofRequest } from '@reclaimprotocol/js-sdk';
 import { supabase } from '@/lib/supabaseClient';
 import { isMobile } from 'react-device-detect';
+import path from 'path';
+import Papa from 'papaparse';
 
 type Profile = {
     address: string;
@@ -69,6 +71,7 @@ export default function CompleteProfile() {
     // const walletAddress = "0x456";
     const [reclaimRequestUrl, setReclaimRequestUrl] = useState('');
     const [newUser, setNewUser] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         console.log("Loading profile info...")
@@ -119,19 +122,92 @@ export default function CompleteProfile() {
     }, [formData.interests, formData.skills]);
 
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.address) {
-            alert("Please enter an address");
-            return;
+        setLoading(true);
+        
+        try {
+            console.log('Saving profile data...');
+            if (newUser) {
+                await addProfile({ ...formData, address: walletAddress });
+                console.log('Added new profile successfully');
+            } else {
+                await updateProfile(walletAddress, { ...formData, address: walletAddress });
+                console.log('Updated profile successfully');
+            }
+
+            console.log('Preparing to generate tasks with data:', {
+                userInfo: {
+                    name: formData.nickname,
+                    job: formData.occupation,
+                    skills: formData.skills.split(','),
+                    sports: [],
+                    interests: formData.interests.split(','),
+                    availability: formData.availability,
+                },
+                cityInfo: {
+                    location: 'Pattaya',
+                    duration: 4,
+                    topic: 'Cryptography, blockchain, mindfulness, networking',
+                }
+            });
+
+            const response = await fetch('api/generateTasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userInfo: {
+                        name: formData.nickname,
+                        job: formData.occupation,
+                        skills: formData.skills.split(','),
+                        sports: [],
+                        interests: formData.interests.split(','),
+                        availability: formData.availability,
+                    },
+                    cityInfo: {
+                        location: 'Pattaya',
+                        duration: 4,
+                        topic: 'Cryptography, blockchain, mindfulness, networking',
+                    },
+                }),
+            });
+
+            console.log('API Response status:', response.status);
+            const responseJson = await response.json();
+            console.log('API Response body:', responseJson);
+
+            if (!response.ok) {
+                throw new Error(`Failed to generate tasks: ${response.status}`);
+            }
+
+            // Parse the CSV string from the tasks property
+            const parsedData = Papa.parse(responseJson.tasks, { 
+                header: true,
+                skipEmptyLines: true
+            }).data;
+            console.log('Parsed CSV tasks:', parsedData);
+
+            localStorage.setItem('tasks', JSON.stringify(parsedData));
+            
+            // Verify stored data
+            const storedTasks = localStorage.getItem('tasks');
+            console.log('Stored tasks raw:', storedTasks);
+            console.log('Stored tasks parsed:', JSON.parse(storedTasks));
+            
+            router.push('/quests');
+
+        } catch (error) {
+            console.error('Detailed error:', {
+                message: error.message,
+                stack: error.stack,
+                error
+            });
+            throw error;
+        } finally {
+            setLoading(false);
         }
-        console.log('Form Data:', formData);
-        if (newUser) {
-            addProfile({ ...formData, address: walletAddress });
-        } else {
-            updateProfile(walletAddress, { ...formData, address: walletAddress });
-        }
-        router.push('/quests');
     };
 
     useEffect(() => {
@@ -366,8 +442,9 @@ export default function CompleteProfile() {
                     <Button
                         type="submit"
                         className="w-full bg-gray-800 hover:bg-black text-white h-14 mt-12"
+                        disabled={loading}
                     >
-                        Save and Continue
+                        {loading ? 'Loading...' : 'Save and Continue'}
                     </Button>
                 </form>
             </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Trophy } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -11,6 +11,16 @@ import { questList } from "@/lib/questList"
 import { supabase } from '@/lib/supabaseClient';
 import { useAtom } from "jotai"
 import { walletAddressAtom } from "@/lib/atoms"
+
+interface Task {
+    'Task Title': string;
+    'Task Description': string;
+    'Category': string;
+    'Points': string;
+    'Duration (hours)': string;
+    participants?: string;
+    requiredSkills?: string;
+}
 
 const getProfile = async (address: string) => {
     const { data, error } = await supabase
@@ -32,6 +42,7 @@ const getProfile = async (address: string) => {
 
 export default function Page() {
     const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
+    const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
         const loadProfileData = async () => {
@@ -44,6 +55,36 @@ export default function Page() {
             }
         };
         loadProfileData();
+    }, []);
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const tasksData = localStorage.getItem('tasks');
+                console.log('Retrieved tasks raw:', tasksData);
+                
+                if (!tasksData) {
+                    console.log('No tasks in localStorage, using questList');
+                    setTasks(questList);
+                    return;
+                }
+
+                // Parse JSON and ensure it's an array
+                const parsedData = JSON.parse(tasksData);
+                console.log('Retrieved tasks parsed:', parsedData);
+                console.log('Retrieved tasks type:', typeof parsedData);
+                console.log('Is retrieved tasks array:', Array.isArray(parsedData));
+                
+                const tasksArray = Array.isArray(parsedData) ? parsedData : [parsedData];
+                console.log('Final tasks array:', tasksArray);
+                setTasks(tasksArray);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+                setTasks(questList);
+            }
+        };
+    
+        fetchTasks();
     }, []);
 
 
@@ -111,20 +152,20 @@ export default function Page() {
 
                     {/* Quest Grid */}
                     <div className="grid grid-cols-2 gap-4">
-                        {questList.map((quest, index) => (
+                        {tasks.map((task, index) => (
                             <Card key={index} className="overflow-hidden">
                                 <div className="p-4 space-y-2">
-                                    <h3 className="font-bold">{quest.title}</h3>
+                                    <h3 className="font-bold">{task['Task Title']}</h3>
                                     <p className="text-sm text-gray-600">
-                                        {quest.description}
+                                        {task['Task Description']}
                                     </p>
                                     <div className="flex justify-between items-center">
                                         <Badge className="bg-[#3D8F8F]">
                                             <Trophy className="w-4 h-4 mr-1" />
-                                            {quest.points}
+                                            {task['Points']}
                                         </Badge>
                                         <Badge variant="secondary" className="bg-white">
-                                            +{quest.duration}h
+                                            +{task['Duration (hours)']}h
                                         </Badge>
                                     </div>
                                 </div>
