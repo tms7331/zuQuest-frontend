@@ -8,97 +8,86 @@ export const questList = [
         'Duration (hours)': 3,
         "Participants (range)": "1-5",
         "Required Skills": "Running, Blockchain knowledge"
+    },
+    {
+        "Task Title": "KiteSurf & Code",
+        "Task Description": "Combine kitesurfing with a smart contract coding session at the beach.",
+        "Category": "Sport",
+        "Points": 15,
+        "Duration (hours)": 4,
+        "Participants (range)": "1-3",
+        "Required Skills": "KiteSurfing, Smart contract development"
+    },
+    {
+        "Task Title": "Pattaya Crypto Meetup",
+        "Task Description": "Host a networking event to discuss cryptography and blockchain trends.",
+        "Category": "Community",
+        "Points": 20,
+        "Duration (hours)": 2,
+        "Participants (range)": "5-10",
+        "Required Skills": "Networking, Cryptography"
+    },
+    {
+        "Task Title": "Database Design Hackathon",
+        "Task Description": "Participate in a hackathon to create innovative database solutions.",
+        "Category": "Building",
+        "Points": 30,
+        "Duration (hours)": 6,
+        "Participants (range)": "2-5",
+        "Required Skills": "Databases"
+    },
+    {
+        "Task Title": "Beachside Yoga & Reflection",
+        "Task Description": "Join a yoga session focused on relaxation and self-reflection.",
+        "Category": "Wellness",
+        "Points": 5,
+        "Duration (hours)": 2,
+        "Participants (range)": "1-5",
+        "Required Skills": "None"
+    },
+    {
+        "Task Title": "ZK Proofs Workshop",
+        "Task Description": "Lead a workshop on zero-knowledge proofs for enthusiasts.",
+        "Category": "Building",
+        "Points": 25,
+        "Duration (hours)": 3,
+        "Participants (range)": "1-5",
+        "Required Skills": "ZK proofs"
+    },
+    {
+        "Task Title": "Mindful Meditation Session",
+        "Task Description": "Join a guided meditation to enhance mindfulness and creativity.",
+        "Category": "Wellness",
+        "Points": 5,
+        "Duration (hours)": 1,
+        "Participants (range)": "1-5",
+        "Required Skills": "None"
+    },
+    {
+        "Task Title": "Temple Exploration Tour",
+        "Task Description": "Explore Pattaya's temples and link the experience to mindfulness.",
+        "Category": "Explore",
+        "Points": 8,
+        "Duration (hours)": 3,
+        "Participants (range)": "1-5",
+        "Required Skills": "None"
+    },
+    {
+        "Task Title": "Smart Contract Code Review",
+        "Task Description": "Conduct a peer review session for smart contract projects.",
+        "Category": "Community",
+        "Points": 15,
+        "Duration (hours)": 2,
+        "Participants (range)": "2-5",
+        "Required Skills": "Smart contract development"
+    },
+    {
+        "Task Title": "Networking Dinner",
+        "Task Description": "Host a dinner to foster new connections in the blockchain community.",
+        "Category": "Community",
+        "Points": 10,
+        "Duration (hours)": 2,
+        "Participants (range)": "3-7",
+        "Required Skills": "Networking"
     }
-    /*
-    {
-        title: "Blockchain Beach Run",
-        description: "Organize a morning run followed by a blockchain discussion on the beach.",
-        category: "Sport",
-        points: 10,
-        duration: 3,
-        participants: "1-5",
-        requiredSkills: "Running, Blockchain knowledge"
-    },
-    {
-        title: "KiteSurf & Code",
-        description: "Combine kitesurfing with a smart contract coding session at the beach.",
-        category: "Sport",
-        points: 15,
-        duration: 4,
-        participants: "1-3",
-        requiredSkills: "KiteSurfing, Smart contract development"
-    },
-    {
-        title: "Pattaya Crypto Meetup",
-        description: "Host a networking event to discuss cryptography and blockchain trends.",
-        category: "Community",
-        points: 20,
-        duration: 2,
-        participants: "5-10",
-        requiredSkills: "Networking, Cryptography"
-    },
-    {
-        title: "Database Design Hackathon",
-        description: "Participate in a hackathon to create innovative database solutions.",
-        category: "Building",
-        points: 30,
-        duration: 6,
-        participants: "2-5",
-        requiredSkills: "Databases"
-    },
-    {
-        title: "Beachside Yoga & Reflection",
-        description: "Join a yoga session focused on relaxation and self-reflection.",
-        category: "Wellness",
-        points: 5,
-        duration: 2,
-        participants: "1-5",
-        requiredSkills: "None"
-    },
-    {
-        title: "ZK Proofs Workshop",
-        description: "Lead a workshop on zero-knowledge proofs for enthusiasts.",
-        category: "Building",
-        points: 25,
-        duration: 3,
-        participants: "1-5",
-        requiredSkills: "ZK proofs"
-    },
-    {
-        title: "Mindful Meditation Session",
-        description: "Join a guided meditation to enhance mindfulness and creativity.",
-        category: "Wellness",
-        points: 5,
-        duration: 1,
-        participants: "1-5",
-        requiredSkills: "None"
-    },
-    {
-        title: "Temple Exploration Tour",
-        description: "Explore Pattaya's temples and link the experience to mindfulness.",
-        category: "Explore",
-        points: 8,
-        duration: 3,
-        participants: "1-5",
-        requiredSkills: "None"
-    },
-    {
-        title: "Smart Contract Code Review",
-        description: "Conduct a peer review session for smart contract projects.",
-        category: "Community",
-        points: 15,
-        duration: 2,
-        participants: "2-5",
-        requiredSkills: "Smart contract development"
-    },
-    {
-        title: "Networking Dinner",
-        description: "Host a dinner to foster new connections in the blockchain community.",
-        category: "Community",
-        points: 10,
-        duration: 2,
-        participants: "3-7",
-        requiredSkills: "Networking"
-    }
-        */
 ]
