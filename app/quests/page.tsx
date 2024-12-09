@@ -22,6 +22,9 @@ interface Task {
     "Required Skills": string;
 }
 
+export const maxDuration = 30; // Sets the maximum duration to 30 seconds
+
+
 const getProfile = async (address: string) => {
     const { data, error } = await supabase
         .from('profiles')
