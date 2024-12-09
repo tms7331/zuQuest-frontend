@@ -2,44 +2,16 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
-import { Trophy, Home, Search, Repeat, Award } from 'lucide-react'
+import { Trophy } from 'lucide-react'
 import QRCode from 'react-qr-code';
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { Footer } from "@/components/footer"
 import { execHaloCmdWeb, HaloGateway } from '@arx-research/libhalo/api/web'
-import { supabase } from '@/lib/supabaseClient';
 import { isMobile } from 'react-device-detect';
+import { Slider } from "@/components/ui/slider";
 
-
-type Pool = {
-    tag: string;
-    count: number;
-}
-
-const fetchPools = async () => {
-    const { data, error } = await supabase.from('pools').select('*');
-    if (error) {
-        console.error('Error fetching pools:', error);
-        throw new Error('Failed to fetch pools');
-    }
-    return data;
-};
-
-
-const updatePool = async (tag: string, updates: Pool) => {
-    const { data, error } = await supabase
-        .from('pools')
-        .update(updates)
-        .eq('tag', tag);
-    if (error) {
-        console.error('Error updating pool:', error);
-        throw new Error('Failed to update profile');
-    }
-    return data;
-};
 
 
 export default function Page() {
@@ -50,6 +22,12 @@ export default function Page() {
     const [statusText, setStatusText] = useState('');
     // qrcodes will only be used on desktop
     const [qrc, setQrc] = useState("");
+
+    const [sliderValueSport, setSliderValueSport] = useState([50])
+    const [sliderValueTravel, setSliderValueTravel] = useState([50])
+    const [stakedSport, setStakedSport] = useState(0)
+    const [stakedTravel, setStakedTravel] = useState(0)
+    const [myBalance, setMyBalance] = useState(100)
 
     async function connectDesktop(tag: string) {
         const cmd = {
@@ -73,13 +51,23 @@ export default function Page() {
         try {
             const res = await gate.execHaloCmd(cmd);
             console.log(res)
-            await updatePool(tag, { tag: tag, count: poolsMap[tag] + 1 });
-            setPoolsMap({ ...poolsMap, [tag]: poolsMap[tag] + 1 });
+
+            // TODO - actually send transaction here, and display txHash
+
+
+            if (tag === 'sport') {
+                setStakedSport(sliderValueSport[0])
+                setMyBalance((prevBalance) => prevBalance - sliderValueSport[0]);
+            } else if (tag === 'travel') {
+                setStakedTravel(sliderValueTravel[0])
+                setMyBalance(myBalance - sliderValueTravel[0])
+            }
             setQrc("");
         } catch (e) {
             console.log('caught error when execHaloCmd');
         }
     }
+
 
     async function connectMobile(tag: string) {
         // Note - this will ONLY work on mobile
@@ -104,8 +92,14 @@ export default function Page() {
                     }
                 }
             });
-            await updatePool(tag, { tag: tag, count: poolsMap[tag] + 1 });
-            setPoolsMap({ ...poolsMap, [tag]: poolsMap[tag] + 1 });
+            if (tag === 'sport') {
+                console.log("USING VALUE", sliderValueSport[0])
+                setStakedSport(sliderValueSport[0])
+                setMyBalance((prevBalance) => prevBalance - sliderValueSport[0]);
+            } else if (tag === 'travel') {
+                setStakedTravel(sliderValueTravel[0])
+                setMyBalance(myBalance - sliderValueTravel[0])
+            }
             setStatusText("");
         } catch (e) {
             // the command has failed, display error to the user
@@ -120,32 +114,6 @@ export default function Page() {
             await connectDesktop(tag);
         }
     }
-
-
-    useEffect(() => {
-        const callFetchPools = async () => {
-            try {
-                const pools = await fetchPools();
-                console.log("GOT POOLS", pools)
-                // {tag: 'sport', count: 2}
-                if (pools) {
-                    const poolsMap = pools.reduce((acc, pool) => {
-                        acc[pool.tag] = pool.count;
-                        return acc;
-                    }, {} as Record<string, number>);
-                    console.log("POOLS MAP", poolsMap);
-
-                    setPoolsMap(poolsMap);
-                } else {
-                    setError('Failed to fetch pools');
-                }
-            } catch (err) {
-                setError('Error fetching data');
-            }
-        };
-
-        callFetchPools();
-    }, []);
 
     return (
         <main className="min-h-screen bg-[#E5F2F2] flex flex-col items-center justify-start p-4">
@@ -175,7 +143,7 @@ export default function Page() {
                 <div className="space-y-4">
                     <h2 className="text-4xl font-bold text-[#3D8F8F]">Fund Your Visions</h2>
                     <p className="text-xl leading-relaxed">
-                        Stake into what you like to see more, the rewards are going to be split based on the number of quests completed in your chosen area
+                        Stake into what you'd like to see more of, the rewards will be split based on the number of quests completed in your chosen areas
                     </p>
                 </div>
 
@@ -189,12 +157,20 @@ export default function Page() {
                     </CardContent>
                 </Card>
 
+                <Card className="bg-white">
+                    <CardContent className="p-6 flex justify-between items-center">
+                        <h3 className="text-2xl font-bold text-[#3D8F8F]">My Balance</h3>
+                        <div className="text-2xl font-bold text-[#3D8F8F]">{myBalance} $ZTC</div>
+                    </CardContent>
+                </Card>
+
+
                 <div className="space-y-6">
                     {/* Sport Section */}
                     <Card>
                         <CardContent className="p-6 space-y-4">
                             <h3 className="text-2xl font-bold text-[#3D8F8F]">Sport</h3>
-                            <div className="text-[#3D8F8F] mb-2">Interest Points: {poolsMap['sport']}</div>
+                            <div className="text-[#3D8F8F] mb-2">My Stake: {stakedSport}</div>
                             <div className="flex gap-4 overflow-x-auto pb-2">
                                 <div className="bg-white rounded-xl p-4 shadow-sm min-w-[150px]">
                                     <h4 className="font-bold">Go for a Run</h4>
@@ -203,7 +179,20 @@ export default function Page() {
                                     <h4 className="font-bold">Join Padel</h4>
                                 </div>
                             </div>
-                            <Button className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A]"
+                            <div className="space-y-2">
+                                <Slider
+                                    value={sliderValueSport}
+                                    onValueChange={setSliderValueSport}
+                                    max={100}
+                                    step={1}
+                                    className="w-full"
+                                />
+                                <div className="text-sm text-[#3D8F8F] text-center">
+                                    Stake Amount: {sliderValueSport[0]}
+                                </div>
+                            </div>
+                            <Button
+                                className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A]"
                                 onClick={() => connectToWristband('sport')}
                             >
                                 Stake
@@ -215,7 +204,7 @@ export default function Page() {
                     <Card>
                         <CardContent className="p-6 space-y-4">
                             <h3 className="text-2xl font-bold text-[#3D8F8F]">Travel</h3>
-                            <div className="text-[#3D8F8F] mb-2">Interest Points: {poolsMap['travel']}</div>
+                            <div className="text-[#3D8F8F] mb-2">My Stake: {stakedTravel}</div>
                             <div className="flex gap-4 overflow-x-auto pb-2">
                                 <div className="bg-white rounded-xl p-4 shadow-sm min-w-[150px]">
                                     <h4 className="font-bold">Island Tour</h4>
@@ -224,13 +213,27 @@ export default function Page() {
                                     <h4 className="font-bold">Go for a Run</h4>
                                 </div>
                             </div>
-                            <Button className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A]"
+                            <div className="space-y-2">
+                                <Slider
+                                    value={sliderValueTravel}
+                                    onValueChange={setSliderValueTravel}
+                                    max={100}
+                                    step={1}
+                                    className="w-full"
+                                />
+                                <div className="text-sm text-[#3D8F8F] text-center">
+                                    Stake Amount: {sliderValueTravel[0]}
+                                </div>
+                            </div>
+                            <Button
+                                className="w-full bg-[#3D8F8F] hover:bg-[#2D7A7A]"
                                 onClick={() => connectToWristband('travel')}
                             >
                                 Stake
                             </Button>
                         </CardContent>
                     </Card>
+
 
 
                     <div>
