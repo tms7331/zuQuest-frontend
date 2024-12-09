@@ -35,7 +35,7 @@ export default function Page() {
                         Have Fun!
                     </h2>
                     <p className="text-gray-500 text-lg md:text-xl max-w-sm mx-auto">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis
+                        Connect, learn, celebrate, and get to better know yourself and each other!
                     </p>
                 </div>
 

@@ -32,7 +32,7 @@ export default function Home() {
             Join a Quest
           </h2>
           <p className="text-gray-500 text-lg md:text-xl max-w-sm mx-auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis
+            Explore challenges that match your interest and goals.  Pick a quest, complete it, and grow!
           </p>
         </div>
 

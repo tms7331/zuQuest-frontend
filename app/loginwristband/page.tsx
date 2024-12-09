@@ -39,7 +39,7 @@ export default function ConnectWristband() {
         const fakeAddress = "0x123"
         // For web testing
         setWalletAddress(fakeAddress);
-        setStatusText("");
+        setStatusText("Scan successful!");
         setLoggedIn(true);
     }
 
@@ -64,7 +64,7 @@ export default function ConnectWristband() {
             const res = await gate.execHaloCmd(cmd);
             const walletAddress = res.etherAddresses[1];
             setWalletAddress(walletAddress);
-            setStatusText("");
+            setStatusText("Scan successful!");
             setQrc("");
             setLoggedIn(true);
         } catch (e) {

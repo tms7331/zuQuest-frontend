@@ -32,7 +32,7 @@ export default function Page() {
                         Fund Your Visions
                     </h2>
                     <p className="text-gray-500 text-lg md:text-xl max-w-sm mx-auto">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis
+                        Stake and support more quests on what you and the community care about.
                     </p>
                 </div>
 
