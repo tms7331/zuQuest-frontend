@@ -15,8 +15,6 @@ import { walletAddressAtom } from '@/lib/atoms';
 import { ReclaimProofRequest } from '@reclaimprotocol/js-sdk';
 import { supabase } from '@/lib/supabaseClient';
 import { isMobile } from 'react-device-detect';
-import path from 'path';
-import Papa from 'papaparse';
 
 type Profile = {
     address: string;
@@ -125,7 +123,7 @@ export default function CompleteProfile() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        
+
         try {
             console.log('Saving profile data...');
             if (newUser) {
@@ -175,14 +173,14 @@ export default function CompleteProfile() {
             });
 
             const responseJson = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(`Failed to generate tasks: ${response.status}`);
             }
 
             // Parse the CSV string manually since it doesn't include headers
             const rows = responseJson.tasks.split('\n');
-            const parsedData = rows.map(row => {
+            const parsedData = rows.map((row: string) => {
                 // Remove quotes and split by comma
                 const values = row.replace(/"/g, '').split(',');
                 return {
