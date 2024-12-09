@@ -166,30 +166,30 @@ export default function Page() {
     }, []);
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#E5F2F2] to-white">
-            <header className="flex items-center justify-between p-4 bg-white">
-                <button className="p-2">
-                    <div className="w-6 h-0.5 bg-gray-600 mb-1"></div>
-                    <div className="w-6 h-0.5 bg-gray-600 mb-1"></div>
-                    <div className="w-6 h-0.5 bg-gray-600"></div>
-                </button>
-                <h1 className="text-2xl font-bold">ZUQUESTS</h1>
-                <div className="flex items-center gap-2">
-                    <div className="flex items-center bg-white rounded-full px-3 py-1 shadow">
-                        <Trophy className="w-5 h-5 text-[#3D8F8F] mr-1" />
-                        <span className="font-semibold">48</span>
+        <main className="min-h-screen bg-[#E5F2F2] flex flex-col items-center justify-start p-4">
+            <div className="w-full max-w-md space-y-12">
+                <header className="flex items-center justify-between p-4 bg-white">
+                    <button className="p-2">
+                        <div className="w-6 h-0.5 bg-gray-600 mb-1"></div>
+                        <div className="w-6 h-0.5 bg-gray-600 mb-1"></div>
+                        <div className="w-6 h-0.5 bg-gray-600"></div>
+                    </button>
+                    <h1 className="text-2xl font-bold">ZUQUESTS</h1>
+                    <div className="flex items-center gap-2">
+                        <div className="flex items-center bg-white rounded-full px-3 py-1 shadow">
+                            <Trophy className="w-5 h-5 text-[#3D8F8F] mr-1" />
+                            <span className="font-semibold">48</span>
+                        </div>
+                        <Image
+                            src="/Profile.png"
+                            alt="Profile"
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                        />
                     </div>
-                    <Image
-                        src="/Profile.png"
-                        alt="Profile"
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                    />
-                </div>
-            </header>
+                </header>
 
-            <main className="flex-grow px-4 py-6 space-y-6 overflow-y-auto">
                 <div className="space-y-4">
                     <h2 className="text-4xl font-bold text-[#3D8F8F]">Fund Your Visions</h2>
                     <p className="text-xl leading-relaxed">
@@ -258,9 +258,9 @@ export default function Page() {
                     </div>
 
                 </div>
-            </main>
-            <Footer />
-        </div>
+                <Footer />
+            </div>
+        </main>
     )
 }
 
