@@ -48,7 +48,7 @@ export default function Page() {
                         className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-2 rounded-full"
                         asChild
                     >
-                        <Link href="/entry3bad">Next</Link>
+                        <Link href="/entry3fun">Next</Link>
                     </Button>
                 </div>
             </div>

@@ -4,13 +4,10 @@ import { Button } from "@/components/ui/button"
 
 export default function Page() {
     return (
-        <main className="min-h-screen bg-white flex flex-col items-center justify-between p-4">
-            {/* Header */}
-            <div className="w-full max-w-md text-center pt-8">
+        <main className="min-h-screen bg-[#E5F2F2] flex flex-col items-center justify-center p-4">
+            <div className="w-full max-w-md text-center mb-12">
                 <h1 className="text-2xl md:text-4xl font-serif tracking-wider">ZUQUESTS</h1>
             </div>
-
-
 
             <div className="w-full max-w-md space-y-8">
                 <div className="relative h-64 md:h-80">
@@ -41,23 +38,23 @@ export default function Page() {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis
                     </p>
                 </div>
-            </div>
 
-            {/* Bottom Buttons */}
-            <div className="w-full max-w-md flex justify-between items-center pt-8 pb-4">
-                <Button
-                    variant="ghost"
-                    className="text-[#3D8F8F] hover:text-[#2D7A7A] hover:bg-transparent"
-                    asChild
-                >
-                    <Link href="/loginwristband">Skip</Link>
-                </Button>
-                <Button
-                    className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-2 rounded-full"
-                    asChild
-                >
-                    <Link href="/loginwristband">Sign In</Link>
-                </Button>
+                {/* Bottom Buttons */}
+                <div className="w-full max-w-md flex justify-between items-center pt-8 pb-4">
+                    <Button
+                        variant="ghost"
+                        className="text-[#3D8F8F] hover:text-[#2D7A7A] hover:bg-transparent"
+                        asChild
+                    >
+                        <Link href="/loginwristband">Skip</Link>
+                    </Button>
+                    <Button
+                        className="bg-[#3D8F8F] hover:bg-[#2D7A7A] text-white px-8 py-2 rounded-full"
+                        asChild
+                    >
+                        <Link href="/loginwristband">Sign In</Link>
+                    </Button>
+                </div>
             </div>
         </main>
     )
