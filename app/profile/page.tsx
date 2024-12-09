@@ -222,7 +222,7 @@ export default function CompleteProfile() {
                         ) : (
                             <>
                                 <p>Open this link to verify your LinkedIn account</p>
-                                <Link href={reclaimRequestUrl} className="text-blue-500 hover:text-blue-700 underline break-all">
+                                <Link href={reclaimRequestUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700 underline break-all">
                                     LinkedIn Verification Service
                                 </Link>
                             </>
