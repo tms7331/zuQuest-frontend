@@ -20,6 +20,7 @@
     "@radix-ui/react-tabs": "^1.1.1",
     "@reclaimprotocol/js-sdk": "^2.1.2",
     "@supabase/supabase-js": "^2.47.2",
+    "@types/papaparse": "^5.3.15",
     "@types/websocket": "^1.0.10",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
