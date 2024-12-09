@@ -49,7 +49,7 @@ export default function Page() {
 
     return (
         <main className="min-h-screen bg-[#E5F2F2] flex flex-col items-center justify-start p-4">
-            <div className="w-full max-w-md space-y-12">
+            <div className="w-full max-w-md space-y-4">
                 <header className="flex items-center justify-between p-4 bg-white">
                     <button className="p-2">
                         <div className="w-6 h-0.5 bg-gray-600 mb-1"></div>
@@ -72,9 +72,9 @@ export default function Page() {
                     </div>
                 </header>
 
-                <div>
+                <div className="-mt-4">
                     {/* Featured Quest Card */}
-                    <Card className="overflow-hidden">
+                    <Card className="overflow-hidden mb-6">
                         <div className="relative">
                             <Image
                                 src="/CitySkyline.png"
