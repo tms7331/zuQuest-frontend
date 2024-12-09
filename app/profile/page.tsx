@@ -276,10 +276,10 @@ export default function CompleteProfile() {
                                 <SelectValue placeholder="Pick Your Availability" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="full-time">Full Time</SelectItem>
-                                <SelectItem value="part-time">Part Time</SelectItem>
-                                <SelectItem value="contract">Contract</SelectItem>
-                                <SelectItem value="freelance">Freelance</SelectItem>
+                                <SelectItem value="very-busy">Very Busy</SelectItem>
+                                <SelectItem value="busy">Busy</SelectItem>
+                                <SelectItem value="balanced">Balanced</SelectItem>
+                                <SelectItem value="mostly-free">Mostly Free</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

@@ -83,13 +83,6 @@ export default function Page() {
                                 height={300}
                                 className="w-full object-cover"
                             />
-                            <div className="absolute top-4 right-4 flex gap-2">
-                                <Badge className="bg-[#3D8F8F]">
-                                    <Trophy className="w-4 h-4 mr-1" />
-                                    12
-                                </Badge>
-                                <Badge className="bg-[#A5D8D8] text-black">+1 day</Badge>
-                            </div>
                         </div>
                         <div className="p-4 space-y-4">
                             <h2 className="text-2xl font-bold">Mentor 2 Participants in Coding</h2>
