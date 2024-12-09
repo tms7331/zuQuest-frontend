@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import Image from "next/image"
 import { Trophy } from 'lucide-react'
 import QRCode from 'react-qr-code';
@@ -11,10 +12,81 @@ import { Footer } from "@/components/footer"
 import { execHaloCmdWeb, HaloGateway } from '@arx-research/libhalo/api/web'
 import { isMobile } from 'react-device-detect';
 import { Slider } from "@/components/ui/slider";
+import { Interface } from '@ethersproject/abi';
+import { serialize } from "@ethersproject/transactions";
+import { keccak256 } from "@ethersproject/keccak256";
+import { hexlify } from "@ethersproject/bytes";
+import { useAtom } from 'jotai';
+import { walletAddressAtom } from '@/lib/atoms';
+import { createPublicClient, http } from 'viem';
+
+
+async function getTransaction(address: `0x${string}`, eventName: string, amount: number) {
+    // Network Name: Fhenix Nitrogen
+    // New RPC URL: https://api.nitrogen.fhenix.zone
+    // Chain ID: 8008148
+    // Currency Symbol: FHE
+    // Block Explorer URL: https://explorer.nitrogen.fhenix.zone
+    const abi = [
+        "function stakeFake(address _address, string memory eventName, uint256 amount) public"
+    ];
+    const iface = new Interface(abi);
+    const encodedData = iface.encodeFunctionData("stakeFake", [address, eventName, amount]);
+
+
+    const client = createPublicClient({
+        transport: http('https://api.nitrogen.fhenix.zone'),
+    });
+    const nonce = await client.getTransactionCount({ address: address });
+
+    const transaction = {
+        // Hardcoding our contract address
+        to: '0xDdF8524928eF00d646443682c5283E22430137a9',
+        value: BigInt("0"),
+        gasLimit: BigInt(2883746),
+        maxFeePerGas: BigInt('21000000000'),
+        maxPriorityFeePerGas: BigInt('2000000000'),
+        data: encodedData,
+        nonce: nonce,
+        type: 2,
+        chainId: 8008148,
+    };
+    return transaction;
+}
+
+function getDigest(transaction: any) {
+    const serializedTransaction = serialize(transaction);
+    const transactionHash = keccak256(serializedTransaction);
+    const digest = hexlify(transactionHash).substring(2);
+    return digest;
+}
+
+async function sendTransaction(transaction: any, v: any, r: any, s: any,) {
+    console.log("SENDING TX0", transaction, r, s, v)
+    let txHashRet = ""
+    const signedTransaction = serialize(transaction, { r, s, v });
+    const client = createPublicClient({
+        transport: http('https://api.nitrogen.fhenix.zone'),
+    });
+    console.log("SENDING SIGNED TX ", signedTransaction)
+    const resp = await client.sendRawTransaction({
+        serializedTransaction: signedTransaction as `0x${string}`
+    })
+        .then((txHash: any) => {
+            console.log('Transaction hash:', txHash);
+            txHashRet = txHash
+        })
+        .catch((error: any) => {
+            console.error('Error sending transaction:', error);
+        });
+    return txHashRet;
+}
 
 
 
 export default function Page() {
+
+    const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
 
     const [poolsMap, setPoolsMap] = useState<Record<string, number>>({});
     const [error, setError] = useState<string | null>(null);
@@ -22,6 +94,7 @@ export default function Page() {
     const [statusText, setStatusText] = useState('');
     // qrcodes will only be used on desktop
     const [qrc, setQrc] = useState("");
+    const [txHash, setTxHash] = useState("");
 
     const [sliderValueSport, setSliderValueSport] = useState([50])
     const [sliderValueTravel, setSliderValueTravel] = useState([50])
@@ -30,10 +103,15 @@ export default function Page() {
     const [myBalance, setMyBalance] = useState(100)
 
     async function connectDesktop(tag: string) {
+        const address = walletAddress ? walletAddress : "0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97";
+        const transaction = await getTransaction(address as `0x${string}`, tag, sliderValueSport[0]);
+        const digest = getDigest(transaction);
+
         const cmd = {
             name: 'sign',
             keyNo: 1,
-            message: "0123"
+            // message: "0123"
+            digest: digest
         };
 
         const gate = new HaloGateway('wss://s1.halo-gateway.arx.org', {
@@ -48,12 +126,19 @@ export default function Page() {
             console.error('caught error when waitConnected()');
             console.log(e);
         }
+
         try {
             const res = await gate.execHaloCmd(cmd);
             console.log(res)
 
             // TODO - actually send transaction here, and display txHash
-
+            const v = res.signature.raw.v;
+            const r = "0x" + res.signature.raw.r;
+            const s = "0x" + res.signature.raw.s;
+            console.log("SENDING TX", transaction, v, r, s)
+            const txHash = await sendTransaction(transaction, v, r, s);
+            console.log("txHash", txHash)
+            setTxHash(txHash)
 
             if (tag === 'sport') {
                 setStakedSport(sliderValueSport[0])
@@ -72,10 +157,15 @@ export default function Page() {
     async function connectMobile(tag: string) {
         // Note - this will ONLY work on mobile
         // Need separate function for desktop compatability
+        const address = walletAddress ? walletAddress : "0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97";
+        const transaction = await getTransaction(address as `0x${string}`, tag, sliderValueSport[0]);
+
+        const digest = getDigest(transaction);
         const cmd = {
             name: 'sign',
             keyNo: 1,
-            message: "4567"
+            // message: "4567"
+            digest: digest
         };
 
         try {
@@ -92,6 +182,14 @@ export default function Page() {
                     }
                 }
             });
+
+            const v = res.signature.raw.v;
+            const r = "0x" + res.signature.raw.r;
+            const s = "0x" + res.signature.raw.s;
+            const txHash = await sendTransaction(transaction, v, r, s);
+            console.log("txHash", txHash)
+            setTxHash(txHash)
+
             if (tag === 'sport') {
                 console.log("USING VALUE", sliderValueSport[0])
                 setStakedSport(sliderValueSport[0])
@@ -234,11 +332,17 @@ export default function Page() {
                         </CardContent>
                     </Card>
 
-
-
                     <div>
                         {qrc && (
                             <QRCode value={qrc} />
+                        )}
+                        {txHash && (
+                            <div>
+                                <h3>Transaction Hash:</h3>
+                                <Link href={`https://explorer.nitrogen.fhenix.zone/tx/${txHash}`}>
+                                    <p>{txHash}</p>
+                                </Link>
+                            </div>
                         )}
                     </div>
 
