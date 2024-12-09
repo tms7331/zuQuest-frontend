@@ -1,6 +1,15 @@
 // "Task Title","Task Description","Category","Points","Duration (hours)","Participants (range)","Required Skills"
 export const questList = [
-
+    {
+        'Task Title': "Blockchain Beach Run",
+        'Task Description': "Organize a morning run followed by a blockchain discussion on the beach.",
+        'Category': "Sport",
+        'Points': 10,
+        'Duration (hours)': 3,
+        "Participants (range)": "1-5",
+        "Required Skills": "Running, Blockchain knowledge"
+    }
+    /*
     {
         title: "Blockchain Beach Run",
         description: "Organize a morning run followed by a blockchain discussion on the beach.",
@@ -91,4 +100,5 @@ export const questList = [
         participants: "3-7",
         requiredSkills: "Networking"
     }
+        */
 ]

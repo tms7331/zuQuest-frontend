@@ -16,10 +16,10 @@ interface Task {
     'Task Title': string;
     'Task Description': string;
     'Category': string;
-    'Points': string;
-    'Duration (hours)': string;
-    participants?: string;
-    requiredSkills?: string;
+    'Points': number;
+    'Duration (hours)': number;
+    "Participants (range)": string;
+    "Required Skills": string;
 }
 
 const getProfile = async (address: string) => {
@@ -34,11 +34,6 @@ const getProfile = async (address: string) => {
     }
     return data;
 };
-
-
-
-
-
 
 export default function Page() {
     const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
@@ -62,7 +57,7 @@ export default function Page() {
             try {
                 const tasksData = localStorage.getItem('tasks');
                 console.log('Retrieved tasks raw:', tasksData);
-                
+
                 if (!tasksData) {
                     console.log('No tasks in localStorage, using questList');
                     setTasks(questList);
@@ -74,7 +69,7 @@ export default function Page() {
                 console.log('Retrieved tasks parsed:', parsedData);
                 console.log('Retrieved tasks type:', typeof parsedData);
                 console.log('Is retrieved tasks array:', Array.isArray(parsedData));
-                
+
                 const tasksArray = Array.isArray(parsedData) ? parsedData : [parsedData];
                 console.log('Final tasks array:', tasksArray);
                 setTasks(tasksArray);
@@ -83,7 +78,7 @@ export default function Page() {
                 setTasks(questList);
             }
         };
-    
+
         fetchTasks();
     }, []);
 
