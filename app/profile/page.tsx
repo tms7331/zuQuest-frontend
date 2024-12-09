@@ -121,6 +121,10 @@ export default function CompleteProfile() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!formData.address) {
+            alert("Please enter an address");
+            return;
+        }
         console.log('Form Data:', formData);
         if (newUser) {
             addProfile({ ...formData, address: walletAddress });
