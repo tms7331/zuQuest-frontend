@@ -71,12 +71,14 @@ export default function CompleteProfile() {
     const [newUser, setNewUser] = useState(true);
 
     useEffect(() => {
+        console.log("Loading profile info...")
         const loadProfileData = async () => {
             try {
                 const profileData = await getProfile(walletAddress);
                 if (profileData) {
                     setNewUser(false);
                     setFormData({
+                        address: profileData.address || '',
                         nickname: profileData.nickname || '',
                         occupation: profileData.occupation || '',
                         availability: profileData.availability || '',
@@ -94,6 +96,7 @@ export default function CompleteProfile() {
 
 
     const [formData, setFormData] = useState({
+        address: walletAddress,
         nickname: '',
         occupation: '',
         availability: '',
@@ -126,6 +129,11 @@ export default function CompleteProfile() {
         }
         router.push('/quests');
     };
+
+    useEffect(() => {
+        setWalletAddress(formData.address);
+    }, [formData.address]);
+
 
     const getVerificationReq = async () => {
         const APP_ID = process.env.NEXT_PUBLIC_RECLAIM_APP_ID;
@@ -200,7 +208,15 @@ export default function CompleteProfile() {
                                 <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 <path d="M9 12l2 2 4-4" />
                             </svg>
-                            <span className="text-sm font-mono text-gray-600">{walletAddress}</span>
+                            <Label htmlFor="address"></Label>
+                            <Input
+                                id="address"
+                                required
+                                className="h-14 bg-white/80 backdrop-blur border-0"
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                            />
+
                         </div>
                     </CardContent>
                 </Card>

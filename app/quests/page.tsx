@@ -1,13 +1,52 @@
+"use client"
+
 import Image from "next/image"
-import Link from "next/link"
-import { Trophy, Home, Search, RotateCw, Award } from 'lucide-react'
+import { useEffect } from "react"
+import { Trophy } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
 import { questList } from "@/lib/questList"
+import { supabase } from '@/lib/supabaseClient';
+import { useAtom } from "jotai"
+import { walletAddressAtom } from "@/lib/atoms"
+
+const getProfile = async (address: string) => {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('address', address)
+        .single(); // Fetch only a single record
+    if (error) {
+        console.error('Error fetching profile:', error);
+        throw new Error('Failed to fetch profile');
+    }
+    return data;
+};
+
+
+
+
+
 
 export default function Page() {
+    const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
+
+    useEffect(() => {
+        const loadProfileData = async () => {
+            try {
+                const profileData = await getProfile(walletAddress);
+                console.log("Got profile data...")
+                console.log(profileData);
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        };
+        loadProfileData();
+    }, []);
+
+
     return (
         <main className="min-h-screen bg-[#E5F2F2] flex flex-col items-center justify-start p-4">
             <div className="w-full max-w-md space-y-12">
