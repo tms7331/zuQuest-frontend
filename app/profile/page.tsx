@@ -198,12 +198,16 @@ export default function CompleteProfile() {
             
             router.push('/quests');
 
-        } catch (error) {
-            console.error('Detailed error:', {
-                message: error.message,
-                stack: error.stack,
-                error
-            });
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Detailed error:', {
+                    message: error.message,
+                    stack: error.stack,
+                    error
+                });
+            } else {
+                console.error('Unknown error:', error);
+            }
             throw error;
         } finally {
             setLoading(false);
