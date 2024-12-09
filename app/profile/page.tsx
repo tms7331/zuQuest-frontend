@@ -174,36 +174,33 @@ export default function CompleteProfile() {
                 }),
             });
 
-            console.log('API Response status:', response.status);
             const responseJson = await response.json();
-            console.log('API Response body:', responseJson);
-
+            
             if (!response.ok) {
                 throw new Error(`Failed to generate tasks: ${response.status}`);
             }
 
-            // Parse the CSV string from the tasks property
-            const parsedData = Papa.parse(responseJson.tasks, { 
-                header: true,
-                skipEmptyLines: true
-            }).data;
-            console.log('Parsed CSV tasks:', parsedData);
+            // Parse the CSV string manually since it doesn't include headers
+            const rows = responseJson.tasks.split('\n');
+            const parsedData = rows.map(row => {
+                // Remove quotes and split by comma
+                const values = row.replace(/"/g, '').split(',');
+                return {
+                    'Task Title': values[0],
+                    'Task Description': values[1],
+                    'Category': values[2],
+                    'Points': values[3],
+                    'Duration (hours)': values[4],
+                    'Participants (range)': values[5],
+                    'Required Skills': values[6]
+                };
+            });
 
             localStorage.setItem('tasks', JSON.stringify(parsedData));
-            
-            // Verify stored data
-            const storedTasks = localStorage.getItem('tasks');
-            console.log('Stored tasks raw:', storedTasks);
-            console.log('Stored tasks parsed:', JSON.parse(storedTasks));
-            
             router.push('/quests');
 
         } catch (error) {
-            console.error('Detailed error:', {
-                message: error.message,
-                stack: error.stack,
-                error
-            });
+            console.error('Detailed error:', error);
             throw error;
         } finally {
             setLoading(false);

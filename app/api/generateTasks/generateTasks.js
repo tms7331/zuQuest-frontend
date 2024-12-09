@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 // Replace hardcoded API key with environment variable
 const API_KEY = process.env.OPENAI_API_KEY;
 
@@ -44,50 +42,23 @@ Example:
 "Task Title","Task Description","Category","Points","Duration (hours)","Participants (range)","Required Skills"
     `;
 
-    const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        {
-            model: "gpt-4o",
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify({
+            model: "gpt-4",
             messages: [{ role: "system", content: prompt }],
             temperature: 0.7,
-        },
-        {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${API_KEY}`,
-            },
-        }
-    );
+        })
+    });
 
-    return response.data.choices[0].message.content;
-}
-
-// Test Data
-const userInfo = {
-    name: "John Doe",
-    job: "Dev",
-    skills: ["Smart contract development", "Databases"],
-    sports: ["Running", "KiteSurfing"],
-    interests: ["ZK proofs"],
-    availability: "medium",
-};
-
-const cityInfo = {
-    location: "Pattaya",
-    duration: 4, // weeks
-    topic: "Cryptography, blockchain, mindfulness, networking",
-};
-
-// Generate Tasks
-(async () => {
-    try {
-        const csvTasks = await generateTasks(userInfo, cityInfo);
-
-        // Write the CSV to a file
-        const filePath = './tasks.csv';
-        fs.writeFileSync(filePath, csvTasks);
-        console.log(`Tasks generated successfully and saved to ${filePath}`);
-    } catch (error) {
-        console.error("Error generating tasks:", error.message);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
-})();
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+}
