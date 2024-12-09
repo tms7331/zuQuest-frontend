@@ -23,7 +23,7 @@ export default function ConnectWristband() {
         const fakeAddress = "0x123"
         // For web testing
         setWalletAddress(fakeAddress);
-        setStatusText("Scan successful!");
+        setStatusText("Scan successful! Continue to Profile!");
         setLoggedIn(true);
     }
 
@@ -48,7 +48,7 @@ export default function ConnectWristband() {
             const res = await gate.execHaloCmd(cmd);
             const walletAddress = res.etherAddresses[1];
             setWalletAddress(walletAddress);
-            setStatusText("Scan successful!");
+            setStatusText("Scan successful! Continue to Profile!");
             setQrc("");
             setLoggedIn(true);
         } catch (e) {
@@ -79,7 +79,7 @@ export default function ConnectWristband() {
             // the command has succeeded, display the result to the user
             const walletAddress = res.etherAddresses[1];
             setWalletAddress(walletAddress);
-            setStatusText("");
+            setStatusText("Scan successful! Continue to Profile!");
             setLoggedIn(true);
             // Redirect to profile page after successful scan
             // window.location.href = '/profile';
