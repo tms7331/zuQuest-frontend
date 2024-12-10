@@ -41,19 +41,28 @@ const getProfile = async (address: string) => {
 export default function Page() {
     const [walletAddress, setWalletAddress] = useAtom(walletAddressAtom);
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [firstSkill, setFirstSkill] = useState<string>('coding'); // Default to 'coding'
 
     useEffect(() => {
         const loadProfileData = async () => {
             try {
                 const profileData = await getProfile(walletAddress);
-                console.log("Got profile data...")
+                console.log("Got profile data...");
                 console.log(profileData);
+
+                // Extract the first skill
+                if (profileData && profileData.skills) {
+                    const skillsArray = profileData.skills.split(',');
+                    if (skillsArray.length > 0) {
+                        setFirstSkill(skillsArray[0].trim());
+                    }
+                }
             } catch (error) {
                 console.error('Error loading profile:', error);
             }
         };
         loadProfileData();
-    }, []);
+    }, [walletAddress]);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -124,9 +133,9 @@ export default function Page() {
                             />
                         </div>
                         <div className="p-4 space-y-4">
-                            <h2 className="text-2xl font-bold">Mentor 2 Participants in Coding</h2>
+                            <h2 className="text-2xl font-bold">Mentor 2 Participants in {firstSkill}</h2>
                             <p className="text-gray-600">
-                                Mentor two beginners (or intermediate learners) in coding. Help them understand...
+                                Mentor two beginners (or intermediate learners) in {firstSkill}. Help them understand...
                             </p>
                             <div className="flex gap-4">
                                 <Button className="flex-1 bg-[#3D8F8F] hover:bg-[#2D7A7A]">Accept</Button>
