@@ -1,7 +1,11 @@
 # zuQuest
 
-<img src="readme-assets/zq1.png" alt="App Screenshot 1" width="200" />
-<img src="readme-assets/zq2.png" alt="App Screenshot 2" width="200" />
+<table>
+  <tr>
+    <td><img src="readme-assets/zq1.png" alt="App Screenshot 1" width="200" /></td>
+    <td><img src="readme-assets/zq2.png" alt="App Screenshot 2" width="200" /></td>
+  </tr>
+</table>
 
 ## About
 
