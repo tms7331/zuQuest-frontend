@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# zuQuest
 
-## Getting Started
+<img src="readme-assets/zq1.png" alt="App Screenshot 1" width="200" />
+<img src="readme-assets/zq2.png" alt="App Screenshot 2" width="200" />
 
-First, run the development server:
+## About
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+zuQuest is an MVP built for the [zuThailand hackathon](https://zuthailand.com). This project aims to solve coordination challenges in popup cities through a combination of interest staking, AI-driven event creation, and privacy-preserving cryptography.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Team
+- Michele: Concept & Design
+- Gabin & Me: MVP Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🎯 Interest Staking
+- Users can stake on their interests privately using Fhenix's FHE (Fully Homomorphic Encryption) chain
+- Private staking mechanism ensures user preferences remain confidential
+- Note - FHE contracts and transactions are not fully implemented, but work in progress is available at: [https://github.com/tms7331/zuquest-fhenix](https://github.com/tms7331/zuquest-fhenix)
 
-## Learn More
+### 🔐 Arx Integration
+- Arx chips are utilized for:
+  - Logging in and user accounts
+  - Signing transactions for the Fhenix network
+- Implementation uses [libhalo](https://github.com/arx-research/libhalo), Arx Research's library for programmatic interaction with HaLo tags
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🤖 AI-Powered Event Creation
+- AI algorithms analyze community interests
+- Automatically generates event suggestions based on collective preferences
+- Helps optimize community engagement and participation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📊 Data Import & Verification
+- Integration with Reclaim Protocol for secure data importing
+- Users can import their LinkedIn profiles using webproofs
+- Maintains privacy while verifying user credentials and experience
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Local Development
+1. Node.js and npm must be installed
+2. Copy `.env.example` to `.env` and fill in:
+   - Supabase credentials (requires creation of a Supabase table)
+   - Reclaim credentials
+   - OpenAI api key
+3. Install dependencies: `npm install`
+4. Run the app: `npm run dev`
