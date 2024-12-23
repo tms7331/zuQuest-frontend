@@ -5,6 +5,9 @@ import { generateTasks } from './generateTasks.js';
 // Validate environment variables
 validateEnv();
 
+export const maxDuration = 30; // Sets the maximum duration to 30 seconds
+
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();

@@ -27,7 +27,7 @@ Duration: ${cityInfo.duration} weeks
 Topics: ${cityInfo.topic}
 
 It's for users to get ideas of what to do when attending pop-up cities. A pop-up city is a one month long gathering of people that like to share skills, do activites together, work and create new things. It's usually centered around a theme and brings a given community together that is already bonded by something (a given technology, a sport etc)
-
+Make it so that it's still very personalized to the user, very sensitive to their skills and interests so that there's different outputs for different profiles.
 Generate 10 tasks in a CSV format, including the header row.
 
 These are the broader tasks categories : sport, community, explore, wellness, building

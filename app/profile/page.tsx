@@ -26,6 +26,8 @@ type Profile = {
     wants_to_learn?: string;
 };
 
+export const maxDuration = 30; // Sets the maximum duration to 30 seconds
+
 
 const addProfile = async (profile: Profile) => {
     const { data, error } = await supabase.from('profiles').insert([profile]);
